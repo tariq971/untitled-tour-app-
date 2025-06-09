@@ -22,13 +22,16 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     loginViewModel = Get.find();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (loginViewModel.isUserLoggedIn()) {
-        if(Functions.isShop(loginViewModel.getLoggedInUser())) {
-          Get.offAllNamed("/shop_home");
-        } else {
-          Get.offAllNamed("/customer_home");
+      final args = Get.arguments;
+      if (args==null|| args['from']!='admin') {
+        if (loginViewModel.isUserLoggedIn()) {
+          if (Functions.isShop(loginViewModel.getLoggedInUser())) {
+            Get.offAllNamed("/shop_home");
+          } else {
+            Get.offAllNamed("/customer_home");
+          }
+          // Get.toNamed("/AddFormPage");
         }
-        // Get.toNamed("/AddFormPage");
       }
     });
   }

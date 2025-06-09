@@ -13,6 +13,7 @@ class ProductPage extends StatefulWidget {
   @override
   State<ProductPage> createState() => _ProductPageState();
 }
+
 class _ProductPageState extends State<ProductPage> {
   late ProductsViewModel productsViewModel;
 
@@ -20,13 +21,15 @@ class _ProductPageState extends State<ProductPage> {
   void initState() {
     super.initState();
     productsViewModel = Get.find();
-
+    productsViewModel.loadAllProducts(); // <--- ADD THIS LINE
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Tour Places",),),
+      appBar: AppBar(
+        title: const Text("Tour Places"),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var result = await Get.toNamed('/addProduct');
@@ -34,67 +37,75 @@ class _ProductPageState extends State<ProductPage> {
             Get.snackbar("Product saved", "Product saved successfully");
           }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
-      body: Obx(
-            () {
-          return ListView.builder(
-            itemCount: productsViewModel.products.length,
-            itemBuilder: (context, index) {
-              Product product = productsViewModel.products[index];
-              // print("Product: ${product.toMap()}");
-              return ListTile(
-                onLongPress: () {
-                  Get.dialog(AlertDialog(
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextButton(
-                            child: const Text('Edit'),
-                            onPressed: () {
-                              Get.back();
-                              Get.toNamed('/addProduct',arguments: product);
-                            },
-                          ),
-                          TextButton(
-                            child: const Text('Delete'),
-                            onPressed: () {
-                              Get.back();
-                              productsViewModel.deleteProduct(product);
-                            },
-                          )
-                        ],)
-                  ));
-                },
+      body: Obx(() {
+        print("Products length: ${productsViewModel.products.length}"); // <--- ADD HERE
 
-                leading: product.image==null?Icon(Icons.image,size: 80,):Image.network(product.image!,height: 80,width: 80,),
-                trailing: TextButton(onPressed: () {
+        return ListView.builder(
+
+          itemCount: productsViewModel.products.length,
+          itemBuilder: (context, index) {
+            Product product = productsViewModel.products[index];
+
+            return ListTile(
+              onLongPress: () {
+                Get.dialog(
+                  AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextButton(
+                          child: const Text('Edit'),
+                          onPressed: () {
+                            Get.back();
+                            Get.toNamed('/addProduct', arguments: product);
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Delete'),
+                          onPressed: () {
+                            Get.back();
+                            productsViewModel.deleteProduct(product);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              leading: product.image == null
+                  ? const Icon(Icons.image, size: 80)
+                  : Image.network(
+                product.image!,
+                height: 80,
+                width: 80,
+              ),
+              trailing: TextButton(
+                onPressed: () {
                   productsViewModel.addToCart(product);
-                }, child: Text("Add to cart")),
-
-                title:
-                // Text(product.placeName, style: TextStyle(fontWeight: FontWeight.bold)),
-                // subtitle:   Text(product.rent.toString()),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // my changes ok
-                    Text(product.placeName, style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(product.rent.toString()),
-                    Text('Days: ${product.days}'),
-                    Text('From: ${product.startDate.toString().split(' ').first}'),
-                    Text('To: ${product.endDate.toString().split(' ').first}'),
-                    Text(product.shopName??""),
-                  ],
-                ),
-                // title: Text(product.placeName),
-                // subtitle: Text(product.rent.toString()),
-              );
-            },
-          );
-        },
-      ),
+                },
+                child: const Text("Add to cart"),
+              ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    product.placeName,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(product.rent.toString()),
+                  Text('Days: ${product.days}'),
+                  Text('From: ${product.startDate.toString().split('T').first}'),
+                  Text('To: ${product.endDate.toString().split('T').first}'),
+                  // Text(product.shopName ?? " "),
+                ],
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

@@ -45,9 +45,13 @@ class ProductsRepository {
   List<Product> convertToProducts(QuerySnapshot snapshot) {
     List<Product> products = [];
     for (var snap in snapshot.docs) {
-      products.add(Product.fromMap(snap.data() as Map<String, dynamic>));
-      print('Error converting product:, data: ${snap.data()}');
-
+      try
+    {
+    products.add(Product.fromMap(snap.data() as Map<String, dynamic>));
+  }
+      catch (e){
+  print('Error converting product:, data: ${snap.data()},data: ${snap.id},error: $e');
+  }
     }
     return products;
   }

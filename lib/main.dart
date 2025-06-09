@@ -7,10 +7,15 @@ import 'package:untitled/firebase_options.dart';
 import 'package:untitled/ui/auth/forget_password.dart';
 import 'package:untitled/ui/auth/signupForShop.dart';
 import 'package:untitled/ui/customer_home/customer_home.dart';
+import 'package:untitled/ui/favourite/add_favourite_place_page.dart';
+import 'package:untitled/ui/favourite/favourite_place_page.dart';
 import 'package:untitled/ui/product/add_form.dart';
 import 'package:untitled/ui/product/add_fav.dart';
 import 'package:untitled/ui/product/form.dart';
 import 'package:untitled/ui/product/fav.dart';
+import 'package:untitled/ui/profile/edit_profile.dart';
+import 'package:untitled/ui/profile/profile_binding.dart';
+import 'package:untitled/ui/profile/profile_setting.dart';
 import 'package:untitled/ui/shop_home/shop_home.dart';
 
 Future<void> main() async {
@@ -75,6 +80,15 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/products", page: ()=>ProductPage(),binding: ProductsBinding()),
         GetPage(name: "/addProduct", page: ()=>AddProduct(), binding: AddProductBinding()),
         GetPage(name: "/shop_home", page:()=>ShopHomePage(),),
+        GetPage(name: "/profile", page: () => ProfileSettingsPage()),
+        GetPage(name: "/edit_profile", page: () => EditProfilePage()),
+        GetPage(
+          name: '/profile',
+          page: () => ProfileSettingsPage(),
+          binding: ProfileBinding(),
+        ),
+        GetPage(name: "/favourites", page: () => FavouritePlacesPage()),
+        GetPage(name: "/add_favourite", page: () => AddFavouritePlacePage()),
       ],
 
       initialRoute: "/login",
